@@ -24,18 +24,15 @@ public class PostRepository {
     }
 
     public Post save(Post post) {
-        Post tempPost;
         if (post.getId() == 0) {
-            idPost.incrementAndGet();
-            tempPost = new Post(idPost.get(), post.getContent());
-            posts.put(idPost.get(), tempPost);
-        } else if (posts.containsKey(post.getId())) {
-            tempPost = new Post(post.getId(), post.getContent());
-            posts.replace(post.getId(), tempPost);
-        } else {
-            throw new NotFoundException("Не найден элемент с id - " + post.getId());
+            long id = idPost.incrementAndGet();
+            post.setId(id);
+            posts.put(id, post);
+        } else if (post.getId() != 0) {
+            Long currentId = post.getId();
+            posts.put(currentId, post);
         }
-        return tempPost;
+        return post;
     }
 
     public void removeById(long id) {
